@@ -48,6 +48,25 @@ function expirationCheck($currentDate, $expirationDate){
         $yearsDifferent = $expirationYear - $currentYear;
         $monthsDifferent = $expirationMonth - $currentMonth;
         $daysDifferent = $expirationDay - $currentDay;
+
+        //Deal with Negative Numbers
+        if ($daysDifferent < 0){
+            //Reduce Months Different by 1 Month
+            $monthsDifferent--;
+
+            //Determine Num Days in last month
+            $daysToAdd = cal_days_in_month(CAL_GREGORIAN, $currentMonth - 1, $currentYear);
+
+            //Add days from month removed back to daysDifferent
+            $daysDifferent+= $daysToAdd;
+        }
+        if ($monthsDifferent < 0){
+            //Reduce Years Different by 1 Year
+            $yearsDifferent--;
+
+            //Add Months from Year Removed back to monthsDifferent
+            $monthsDifferent+= 12;
+        }
         
         //Return a string with the result
         return "<p> Still Current! The invoice will be due in $yearsDifferent years, $monthsDifferent months, and $daysDifferent days.</p>";
